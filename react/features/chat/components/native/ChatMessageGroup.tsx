@@ -64,6 +64,7 @@ export default class ChatMessageGroup extends Component<IProps> {
      * @returns {React$Element<*>}
      */
     _renderMessage({ index, item: message }: { index: number; item: IMessage; }) {
+        console.log(message)
         return (
             <ChatMessage
                 message = { message }

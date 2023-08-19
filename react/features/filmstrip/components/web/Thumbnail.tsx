@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import debounce from 'lodash/debounce';
 import React, { Component, KeyboardEvent, RefObject, createRef } from 'react';
 import { WithTranslation } from 'react-i18next';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 
 import { createScreenSharingIssueEvent } from '../../../analytics/AnalyticsEvents';
 import { sendAnalytics } from '../../../analytics/functions';
@@ -21,6 +21,7 @@ import {
     getParticipantByIdOrUndefined,
     getScreenshareParticipantIds,
     hasRaisedHand,
+    isLocalParticipantModerator,
     isLocalScreenshareParticipant,
     isScreenShareParticipant,
     isWhiteboardParticipant
@@ -949,7 +950,7 @@ class Thumbnail extends Component<IProps, IState> {
             _thumbnailType,
             classes
         } = this.props;
-
+        console.log('hello iyed sebai',displayMode)
         className += ` ${DISPLAY_MODE_TO_CLASS_NAME[displayMode]}`;
 
         if (_raisedHand) {
@@ -1066,9 +1067,11 @@ class Thumbnail extends Component<IProps, IState> {
             muted = { local ? undefined : true }
             style = { styles.video }
             videoTrack = { _videoTrack } />;
-
+        console.log('container class name',containerClassName.split(' ')[1])
         return (
-            <span
+            <>
+           
+            {containerClassName.split(' ')[1] ===  'display-video' && <span
                 className = { containerClassName }
                 id = { local
                     ? `localVideoContainer${filmstripType === FILMSTRIP_TYPE.MAIN ? '' : `_${filmstripType}`}`
@@ -1161,7 +1164,8 @@ class Thumbnail extends Component<IProps, IState> {
                         onMouseEnter = { this._onGifMouseEnter }
                         onMouseLeave = { this._onGifMouseLeave } />
                 )}
-            </span>
+            </span>}
+            </>
         );
     }
 

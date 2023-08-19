@@ -91,10 +91,13 @@ interface IProps {
     _videosClassName: string;
 }
 
+
 const MainFilmstrip = (props: IProps) => (
 
     <span>
-       
+        <Filmstrip
+            { ...props }
+            filmstripType = { FILMSTRIP_TYPE.MAIN } />
     </span>
 );
 

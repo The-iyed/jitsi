@@ -1,10 +1,11 @@
 import { Theme } from '@mui/material';
 import React from 'react';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { makeStyles } from 'tss-react/mui';
 
 import { IReduxState } from '../../../app/types';
 import { translate } from '../../../base/i18n/functions';
+import { isLocalParticipantModerator } from '../../../base/participants/functions';
 import Message from '../../../base/react/components/web/Message';
 import { withPixelLineHeight } from '../../../base/styles/functions.web';
 import { MESSAGE_TYPE_LOCAL } from '../../constants';
@@ -125,6 +126,7 @@ const ChatMessage = ({
     t
 }: IProps) => {
     const { classes, cx } = useStyles();
+    const moderator = useSelector(isLocalParticipantModerator);
 
     /**
      * Renders the display name of the sender.
@@ -178,7 +180,7 @@ const ChatMessage = ({
                     message.lobbyChat && !knocking && 'lobbymessage') }>
                 <div className = { classes.replyWrapper }>
                     <div className = { cx('messagecontent', classes.messageContent) }>
-                        {showDisplayName && _renderDisplayName()}
+                        {moderator && showDisplayName && _renderDisplayName()}
                         <div className = { cx('usermessage', classes.userMessage) }>
                             <span className = 'sr-only'>
                                 {message.displayName === message.recipient
