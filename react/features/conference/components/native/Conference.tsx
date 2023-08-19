@@ -10,14 +10,14 @@ import {
     ViewStyle
 } from 'react-native';
 import { EdgeInsets, withSafeAreaInsets } from 'react-native-safe-area-context';
-import { connect, useDispatch } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 
 import { appNavigate } from '../../../app/actions';
 import { IReduxState, IStore } from '../../../app/types';
 import { CONFERENCE_BLURRED, CONFERENCE_FOCUSED } from '../../../base/conference/actionTypes';
 import { FULLSCREEN_ENABLED, PIP_ENABLED } from '../../../base/flags/constants';
 import { getFeatureFlag } from '../../../base/flags/functions';
-import { getParticipantCount } from '../../../base/participants/functions';
+import { getParticipantCount, isLocalParticipantModerator } from '../../../base/participants/functions';
 import Container from '../../../base/react/components/native/Container';
 import LoadingIndicator from '../../../base/react/components/native/LoadingIndicator';
 import TintedView from '../../../base/react/components/native/TintedView';
@@ -400,7 +400,7 @@ class Conference extends AbstractConference<IProps, State> {
             alwaysOnTitleBarStyles = styles.alwaysOnTitleBar;
 
         }
-
+        const moderator = useSelector(isLocalParticipantModerator);
         return (
             <>
                 {/*
@@ -448,7 +448,7 @@ class Conference extends AbstractConference<IProps, State> {
                     {
                         _shouldDisplayTileView
                         || <>
-                            <Filmstrip />
+                           {moderator && <Filmstrip />}
                             { this._renderNotificationsContainer() }
                             <Toolbox />
                         </>

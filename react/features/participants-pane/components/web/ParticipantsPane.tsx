@@ -1,3 +1,4 @@
+import { div } from '@tensorflow/tfjs-core';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
@@ -144,7 +145,7 @@ const ParticipantsPane = () => {
                         icon = { IconCloseLarge }
                         onClick = { onClosePane } />
                 </div>
-                <div className = { classes.container }>
+              {showFooter ?  <div className = { classes.container }>
                     <LobbyParticipants />
                     <br className = { classes.antiCollapse } />
                     <MeetingParticipants
@@ -152,7 +153,10 @@ const ParticipantsPane = () => {
                         setSearchString = { setSearchString } />
                     {isBreakoutRoomsSupported && <RoomList searchString = { searchString } />}
                     {showAddRoomButton && <AddBreakoutRoomButton />}
-                </div>
+                </div> : 
+                <div className = { classes.container }>You must be a moderator to manage this section !</div>
+                
+                }
                 {showFooter && (
                     <div className = { classes.footer }>
                         {showMuteAllButton && (

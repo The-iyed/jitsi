@@ -1,9 +1,10 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 
 import { IReduxState } from '../../../app/types';
 import { getToolbarButtons } from '../../../base/config/functions.web';
 import { isMobileBrowser } from '../../../base/environment/utils';
+import { isLocalParticipantModerator } from '../../../base/participants/functions';
 import { LAYOUTS } from '../../../video-layout/constants';
 import { getCurrentLayout } from '../../../video-layout/functions.web';
 import {
@@ -91,6 +92,7 @@ interface IProps {
 }
 
 const MainFilmstrip = (props: IProps) => (
+
     <span>
         <Filmstrip
             { ...props }

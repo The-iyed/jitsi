@@ -9,7 +9,7 @@ import styles from './styles';
 const ParticipantsCounter = () => {
     const participantsCount = useSelector(getParticipantCount);
 
-    return <Text style = { styles.participantsBadge }>{participantsCount}</Text>;
+    return <Text style = { styles.participantsBadge }>{0}</Text>;
 };
 
 export default ParticipantsCounter;
