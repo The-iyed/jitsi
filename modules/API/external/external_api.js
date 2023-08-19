@@ -1178,6 +1178,7 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
      * @returns {HTMLElement} The iframe.
      */
     getIFrame() {
+        console.log(this._frame)
         return this._frame;
     }
 

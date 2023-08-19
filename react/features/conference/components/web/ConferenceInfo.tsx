@@ -63,10 +63,6 @@ const COMPONENTS: Array<{
         id: 'conference-timer'
     },
     {
-        Component: SpeakerStatsLabel,
-        id: 'participants-count'
-    },
-    {
         Component: E2EELabel,
         id: 'e2ee'
     },

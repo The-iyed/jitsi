@@ -97,6 +97,8 @@ function SecurityDialog({
             ok = {{ hidden: true }}
             titleKey = 'security.title'>
             <div className = 'security-dialog'>
+                <br/>
+                <br/>
                 <LobbySection />
                 {!_disableLobbyPassword && (
                     <>

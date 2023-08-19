@@ -67,7 +67,7 @@ export const toDataURL = async (url: string) => {
  * @returns {Promise<string>}
  *
  */
-export function resizeImage(base64image: any, width = 1920, height = 1080): Promise<string> {
+export function resizeImage(base64image: any, width = 600, height = 1080): Promise<string> {
 
     // In order to work on Firefox browser we need to handle the asynchronous nature of image loading;  We need to use
     // a promise mechanism. The reason why it 'works' without this mechanism in Chrome is actually 'by accident' because

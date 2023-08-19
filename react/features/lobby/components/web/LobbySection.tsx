@@ -20,7 +20,7 @@ interface IProps extends WithTranslation {
     /**
      * True if the section should be visible.
      */
-    _visible: boolean;
+    _visible?: boolean;
 
     /**
      * The Redux Dispatch function.
@@ -39,7 +39,7 @@ interface IState {
 /**
  * Implements a security feature section to control lobby mode.
  */
-class LobbySection extends PureComponent<IProps, IState> {
+class LobbySection extends PureComponent<IProps, IState > {
     /**
      * Instantiates a new component.
      *

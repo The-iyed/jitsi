@@ -557,7 +557,7 @@ var config = {
 
     // DEPRECATED. Please use `lobby?.autoKnock` instead.
     // If Lobby is enabled starts knocking automatically.
-    // autoKnockLobby: false,
+    autoKnockLobby: true,
 
     // DEPRECATED. Please use `lobby?.enableChat` instead.
     // Enable lobby chat.
@@ -586,14 +586,16 @@ var config = {
     //     // If set,landing page will redirect to this URL.
     //     customUrl: ''
     // },
+    enableLobby: false,
 
     // Configs for the lobby screen.
-    // lobby {
-    //     // If Lobby is enabled, it starts knocking automatically. Replaces `autoKnockLobby`.
-    //     autoKnock: false,
-    //     // Enables the lobby chat. Replaces `enableLobbyChat`.
-    //     enableChat: true,
-    // },
+    lobby :{
+        // If Lobby is enabled, it starts knocking automatically. Replaces `autoKnockLobby`.
+        autoKnock: true, 
+        autoEnable: true,
+        // Enables the lobby chat. Replaces `enableLobbyChat`.
+        // enableChat: true,
+    },
 
     // Configs for the security related UI elements.
     // securityUi: {

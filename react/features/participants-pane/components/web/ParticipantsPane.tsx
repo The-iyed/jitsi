@@ -1,97 +1,102 @@
-import { div } from '@tensorflow/tfjs-core';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
-import { makeStyles } from 'tss-react/mui';
+import { div } from "@tensorflow/tfjs-core";
+import React, { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import { makeStyles } from "tss-react/mui";
 
-import { IReduxState } from '../../../app/types';
-import participantsPaneTheme from '../../../base/components/themes/participantsPaneTheme.json';
-import { openDialog } from '../../../base/dialog/actions';
-import { IconCloseLarge, IconDotsHorizontal } from '../../../base/icons/svg';
-import { isLocalParticipantModerator } from '../../../base/participants/functions';
-import Button from '../../../base/ui/components/web/Button';
-import ClickableIcon from '../../../base/ui/components/web/ClickableIcon';
-import { BUTTON_TYPES } from '../../../base/ui/constants.web';
-import { findAncestorByClass } from '../../../base/ui/functions.web';
-import { isAddBreakoutRoomButtonVisible } from '../../../breakout-rooms/functions';
-import MuteEveryoneDialog from '../../../video-menu/components/web/MuteEveryoneDialog';
-import { close } from '../../actions.web';
+import { IReduxState } from "../../../app/types";
+import participantsPaneTheme from "../../../base/components/themes/participantsPaneTheme.json";
+import { openDialog } from "../../../base/dialog/actions";
+import { IconCloseLarge, IconDotsHorizontal } from "../../../base/icons/svg";
+import { isLocalParticipantModerator } from "../../../base/participants/functions";
+import Button from "../../../base/ui/components/web/Button";
+import ClickableIcon from "../../../base/ui/components/web/ClickableIcon";
+import { BUTTON_TYPES } from "../../../base/ui/constants.web";
+import { findAncestorByClass } from "../../../base/ui/functions.web";
+import { isAddBreakoutRoomButtonVisible } from "../../../breakout-rooms/functions";
+import LobbySection from "../../../lobby/components/web/LobbySection";
+import MuteEveryoneDialog from "../../../video-menu/components/web/MuteEveryoneDialog";
+import { close } from "../../actions.web";
 import {
     getParticipantsPaneOpen,
     isMoreActionsVisible,
-    isMuteAllVisible
-} from '../../functions';
-import { AddBreakoutRoomButton } from '../breakout-rooms/components/web/AddBreakoutRoomButton';
-import { RoomList } from '../breakout-rooms/components/web/RoomList';
+    isMuteAllVisible,
+} from "../../functions";
+import { AddBreakoutRoomButton } from "../breakout-rooms/components/web/AddBreakoutRoomButton";
+import { RoomList } from "../breakout-rooms/components/web/RoomList";
 
-import { FooterContextMenu } from './FooterContextMenu';
-import LobbyParticipants from './LobbyParticipants';
-import MeetingParticipants from './MeetingParticipants';
+import { FooterContextMenu } from "./FooterContextMenu";
+import LobbyParticipants from "./LobbyParticipants";
+import MeetingParticipants from "./MeetingParticipants";
 
-
-const useStyles = makeStyles()(theme => {
+const useStyles = makeStyles()((theme) => {
     return {
         container: {
-            boxSizing: 'border-box',
+            boxSizing: "border-box",
             flex: 1,
-            overflowY: 'auto',
-            position: 'relative',
+            overflowY: "auto",
+            position: "relative",
             padding: `0 ${participantsPaneTheme.panePadding}px`,
 
-            '&::-webkit-scrollbar': {
-                display: 'none'
-            }
+            "&::-webkit-scrollbar": {
+                display: "none",
+            },
         },
 
         closeButton: {
-            alignItems: 'center',
-            cursor: 'pointer',
-            display: 'flex',
-            justifyContent: 'center'
+            alignItems: "center",
+            cursor: "pointer",
+            display: "flex",
+            justifyContent: "center",
         },
 
         header: {
-            alignItems: 'center',
-            boxSizing: 'border-box',
-            display: 'flex',
-            height: '60px',
+            alignItems: "center",
+            boxSizing: "border-box",
+            display: "flex",
+            height: "60px",
             padding: `0 ${participantsPaneTheme.panePadding}px`,
-            justifyContent: 'flex-end'
+            justifyContent: "flex-end",
         },
 
         antiCollapse: {
             fontSize: 0,
 
-            '&:first-child': {
-                display: 'none'
+            "&:first-child": {
+                display: "none",
             },
 
-            '&:first-child + *': {
-                marginTop: 0
-            }
+            "&:first-child + *": {
+                marginTop: 0,
+            },
         },
 
         footer: {
-            display: 'flex',
-            justifyContent: 'flex-end',
-            padding: `${theme.spacing(4)} ${participantsPaneTheme.panePadding}px`,
+            display: "flex",
+            justifyContent: "flex-end",
+            padding: `${theme.spacing(4)} ${
+                participantsPaneTheme.panePadding
+            }px`,
 
-            '& > *:not(:last-child)': {
-                marginRight: theme.spacing(3)
-            }
+            "& > *:not(:last-child)": {
+                marginRight: theme.spacing(3),
+            },
         },
 
         footerMoreContainer: {
-            position: 'relative'
-        }
+            position: "relative",
+        },
     };
 });
 
 const ParticipantsPane = () => {
     const { classes } = useStyles();
     const paneOpen = useSelector(getParticipantsPaneOpen);
-    const isBreakoutRoomsSupported = useSelector((state: IReduxState) => state['features/base/conference'])
-        .conference?.getBreakoutRooms()?.isSupported();
+    const isBreakoutRoomsSupported = useSelector(
+        (state: IReduxState) => state["features/base/conference"]
+    )
+        .conference?.getBreakoutRooms()
+        ?.isSupported();
     const showAddRoomButton = useSelector(isAddBreakoutRoomButtonVisible);
     const showFooter = useSelector(isLocalParticipantModerator);
     const showMuteAllButton = useSelector(isMuteAllVisible);
@@ -99,20 +104,26 @@ const ParticipantsPane = () => {
     const dispatch = useDispatch();
     const { t } = useTranslation();
 
-    const [ contextOpen, setContextOpen ] = useState(false);
-    const [ searchString, setSearchString ] = useState('');
+    const [contextOpen, setContextOpen] = useState(false);
+    const [searchString, setSearchString] = useState("");
 
-    const onWindowClickListener = useCallback((e: any) => {
-        if (contextOpen && !findAncestorByClass(e.target, classes.footerMoreContainer)) {
-            setContextOpen(false);
-        }
-    }, [ contextOpen ]);
+    const onWindowClickListener = useCallback(
+        (e: any) => {
+            if (
+                contextOpen &&
+                !findAncestorByClass(e.target, classes.footerMoreContainer)
+            ) {
+                setContextOpen(false);
+            }
+        },
+        [contextOpen]
+    );
 
     useEffect(() => {
-        window.addEventListener('click', onWindowClickListener);
+        window.addEventListener("click", onWindowClickListener);
 
         return () => {
-            window.removeEventListener('click', onWindowClickListener);
+            window.removeEventListener("click", onWindowClickListener);
         };
     }, []);
 
@@ -129,7 +140,7 @@ const ParticipantsPane = () => {
     }, []);
 
     const onToggleContext = useCallback(() => {
-        setContextOpen(open => !open);
+        setContextOpen((open) => !open);
     }, []);
 
     if (!paneOpen) {
@@ -137,55 +148,76 @@ const ParticipantsPane = () => {
     }
 
     return (
-        <div className = 'participants_pane'>
-            <div className = 'participants_pane-content'>
-                <div className = { classes.header }>
+        <div className="participants_pane">
+            <div className="participants_pane-content">
+                <div className={classes.header}>
                     <ClickableIcon
-                        accessibilityLabel = { t('participantsPane.close', 'Close') }
-                        icon = { IconCloseLarge }
-                        onClick = { onClosePane } />
+                        accessibilityLabel={t(
+                            "participantsPane.close",
+                            "Close"
+                        )}
+                        icon={IconCloseLarge}
+                        onClick={onClosePane}
+                    />
                 </div>
-              {showFooter ?  <div className = { classes.container }>
-                    <LobbyParticipants />
-                    <br className = { classes.antiCollapse } />
-                    <MeetingParticipants
-                        searchString = { searchString }
-                        setSearchString = { setSearchString } />
-                    {isBreakoutRoomsSupported && <RoomList searchString = { searchString } />}
-                    {showAddRoomButton && <AddBreakoutRoomButton />}
-                </div> : 
-                <div className = { classes.container }>You must be a moderator to manage this section !</div>
-                
-                }
+                {showFooter ? (
+                    <div className={classes.container}>
+                        <LobbySection />
+                        <LobbyParticipants />
+                        <br className={classes.antiCollapse} />
+                        <MeetingParticipants
+                            searchString={searchString}
+                            setSearchString={setSearchString}
+                        />
+                        {isBreakoutRoomsSupported && (
+                            <RoomList searchString={searchString} />
+                        )}
+                        {showAddRoomButton && <AddBreakoutRoomButton />}
+                    </div>
+                ) : (
+                    <div className={classes.container}>
+                        You must be a moderator to manage this section !
+                    </div>
+                )}
                 {showFooter && (
-                    <div className = { classes.footer }>
-                        {showMuteAllButton && (
-                            <Button
-                                accessibilityLabel = { t('participantsPane.actions.muteAll') }
-                                labelKey = { 'participantsPane.actions.muteAll' }
-                                onClick = { onMuteAll }
-                                type = { BUTTON_TYPES.SECONDARY } />
-                        )}
-                        {showMoreActionsButton && (
-                            <div className = { classes.footerMoreContainer }>
+                    <div>
+                        <div className={classes.footer}>
+                            {showMuteAllButton && (
                                 <Button
-                                    accessibilityLabel = { t('participantsPane.actions.moreModerationActions') }
-                                    icon = { IconDotsHorizontal }
-                                    id = 'participants-pane-context-menu'
-                                    onClick = { onToggleContext }
-                                    type = { BUTTON_TYPES.SECONDARY } />
-                                <FooterContextMenu
-                                    isOpen = { contextOpen }
-                                    onDrawerClose = { onDrawerClose }
-                                    onMouseLeave = { onToggleContext } />
-                            </div>
-                        )}
+                                    accessibilityLabel={t(
+                                        "participantsPane.actions.muteAll"
+                                    )}
+                                    labelKey={
+                                        "participantsPane.actions.muteAll"
+                                    }
+                                    onClick={onMuteAll}
+                                    type={BUTTON_TYPES.SECONDARY}
+                                />
+                            )}
+                            {showMoreActionsButton && (
+                                <div className={classes.footerMoreContainer}>
+                                    <Button
+                                        accessibilityLabel={t(
+                                            "participantsPane.actions.moreModerationActions"
+                                        )}
+                                        icon={IconDotsHorizontal}
+                                        id="participants-pane-context-menu"
+                                        onClick={onToggleContext}
+                                        type={BUTTON_TYPES.SECONDARY}
+                                    />
+                                    <FooterContextMenu
+                                        isOpen={contextOpen}
+                                        onDrawerClose={onDrawerClose}
+                                        onMouseLeave={onToggleContext}
+                                    />
+                                </div>
+                            )}
+                        </div>
                     </div>
                 )}
             </div>
         </div>
     );
 };
-
 
 export default ParticipantsPane;
