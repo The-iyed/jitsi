@@ -92,9 +92,6 @@ interface IProps {
 const StageFilmstrip = (props: IProps) =>
     props._currentLayout === LAYOUTS.STAGE_FILMSTRIP_VIEW ? (
         <span className = { LAYOUT_CLASSNAMES[LAYOUTS.TILE_VIEW] }>
-            <Filmstrip
-                { ...props }
-                filmstripType = { FILMSTRIP_TYPE.STAGE } />
         </span>
     ) : null
 ;

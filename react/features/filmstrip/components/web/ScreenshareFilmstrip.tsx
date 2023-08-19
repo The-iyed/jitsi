@@ -89,9 +89,6 @@ const ScreenshareFilmstrip = (props: IProps) =>
     props._currentLayout === LAYOUTS.STAGE_FILMSTRIP_VIEW
         && props._remoteParticipants.length === 1 ? (
             <span className = { LAYOUT_CLASSNAMES[LAYOUTS.TILE_VIEW] }>
-                <Filmstrip
-                    { ...props }
-                    filmstripType = { FILMSTRIP_TYPE.SCREENSHARE } />
             </span>
         ) : null
 ;
